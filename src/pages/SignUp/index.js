@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Image } from 'react-native';
 
@@ -14,6 +14,11 @@ import {
 } from './styles';
 
 const SignUp = ({ navigation }) => {
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  function handleSubmit() {}
+
   return (
     <Background>
       <Container>
@@ -25,6 +30,8 @@ const SignUp = ({ navigation }) => {
             autoCorrect={false}
             autoCapitalize="none"
             placeholder="Digite seu nome completo"
+            returnKeyType="next"
+            onSubmitEditing={() => emailRef.current.focus()}
           />
 
           <FormInput
@@ -33,6 +40,9 @@ const SignUp = ({ navigation }) => {
             autoCorrect={false}
             autoCapitalize="none"
             placeholder="Digite seu email"
+            ref={emailRef}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current.focus()}
           />
 
           <FormInput
@@ -40,9 +50,12 @@ const SignUp = ({ navigation }) => {
             secureTextEntry
             autoCapitalize="none"
             placeholder="Digite sua senha"
+            ref={passwordRef}
+            returnKeyType="send"
+            onSubmitEditing={handleSubmit}
           />
 
-          <SubmitButton onPress={() => {}}>Acessar</SubmitButton>
+          <SubmitButton onPress={handleSubmit}>Acessar</SubmitButton>
         </Form>
 
         <SignLink onPress={() => navigation.navigate('SignIn')}>
