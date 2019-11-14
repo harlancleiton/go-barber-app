@@ -2,7 +2,7 @@ import { Alert } from 'react-native';
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 
 import api from '../../../services/api';
-import { singInSuccess, singFailure, singUpSuccess } from './actions';
+import { signInSuccess, signFailure, signUpSuccess } from './actions';
 
 export function* singIn({ payload }) {
   try {
@@ -14,15 +14,16 @@ export function* singIn({ payload }) {
 
     if (user.provider) {
       Alert.alert('Não autorizado', 'Usuario é prestador de serviço');
+      yield put(signFailure());
       return;
     }
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
-    yield put(singInSuccess(token, user));
+    yield put(signInSuccess(token, user));
   } catch (error) {
     Alert.alert('Falha na autenticação', 'Verifique suas credenciais');
-    yield put(singFailure());
+    yield put(signFailure());
   }
 }
 
@@ -34,13 +35,12 @@ export function* singUp({ payload }) {
       name,
       email,
       password,
-      provider: true,
     });
 
-    yield put(singUpSuccess());
+    yield put(signUpSuccess());
   } catch (error) {
     Alert.alert('Falha no cadastro', 'Verifique seus dados');
-    yield put(singFailure());
+    yield put(signFailure());
   }
 }
 
@@ -54,6 +54,6 @@ export function setToken({ payload }) {
 
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
-  takeLatest('@auth/SING_IN_REQUEST', singIn),
-  takeLatest('@auth/SING_UP_REQUEST', singUp),
+  takeLatest('@auth/SIGN_IN_REQUEST', singIn),
+  takeLatest('@auth/SIGN_UP_REQUEST', singUp),
 ]);
